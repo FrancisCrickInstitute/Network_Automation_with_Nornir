@@ -1,0 +1,70 @@
+# RegEx Patterns
+<vars>
+ETHERNET = "Ethernet\S+"
+PO = "port-channel\S+"
+SVI = "Vlan\S+"
+</vars>
+
+<group name="GLOBAL">
+hostname {{ hostname }}
+</group>
+
+<group name="AAA">
+aaa authentication login default group {{ aaa_authentication_login_default_group | default(false) }}
+aaa authorization config-commands default group {{ aaa_authorization_config_commands_default_group | ORPHRASE | default(false) }}
+aaa authorization commands default group {{ aaa_authorization_commands_default_group | ORPHRASE | default(false) }}
+aaa authorization config-commands console group {{ aaa_authorization_config_commands_console_group | ORPHRASE | default(false) }}
+aaa authorization commands console group {{ aaa_authorization_commands_console_group | ORPHRASE | default(false) }}
+aaa authentication dot1x default group {{ aaa_authentication_dot1x_default_group | ORPHRASE | default(false) }}
+aaa accounting dot1x default group {{ aaa_accounting_dot1x_default_group | ORPHRASE | default(false) }}
+aaa authorization cts default group {{ aaa_authorization_cts_default_group | ORPHRASE | default(false) }}
+aaa accounting default group {{ aaa_accounting_default_group | default(false) }}
+</group>
+
+# Use TTP Dynamic Path to nest data
+# https://ttp.readthedocs.io/en/stable/Forming%20Results%20Structure/Dynamic%20Path.html
+<group name="ETH.{{ interface }}">
+interface {{ interface | re("ETHERNET") }}
+  description {{ description | ORPHRASE | default(false) }}
+  switchport access vlan {{ switchport_access_vlan | DIGIT | default(false) }}
+  spanning-tree port type {{ spanning_tree_port_type | default(false) }}
+  spanning-tree port type edge {{ spanning_tree_port_type_edge | set(true) | default(false) }}
+  no shutdown {{ no_shutdown | set(true) | default(false) }}
+  switchport mode {{ switchport_mode | default(false) }}
+  switchport trunk allowed vlan {{ switchport_trunk_allowed_vlan | default(false) }}
+  channel-group {{ channel_group_number | DIGIT | default(false) }} mode {{ channel_group_mode | default(false) }}
+</group>
+
+<group name="PO.{{ interface }}">
+interface {{ interface | re("PO") }}
+  description {{ description | ORPHRASE | default(false) }}
+  switchport mode {{ switchport_mode | default(false) }}
+  cts manual {{ cts | set(true) | default(false) }}
+    policy static sgt {{ cts_sgt | DIGIT | default(false) }} trusted {{ cts_sgt_trusted | set(true) | default(false) }}
+  service-policy type queuing output {{ service_policy_type_queuing_output | default(false) }}
+  service-policy type queuing input {{ service_policy_type_queuing_input | default(false) }}
+  vpc peer-link {{ vpc_peer_link | set(true) | default(false) }}
+  fabricpath isis authentication-type md5 {{ fabricpath_isis_authentication_type_md5 | set(true) | default(false) }}
+  fabricpath isis authentication key-chain {{ fabricpath_isis_authentication_key_chain | default(false) }}
+</group>
+
+<group name="SVI.{{ interface }}">
+interface {{ interface | re("SVI") }}
+  description {{ description | ORPHRASE | default(false) }}
+  no shutdown {{ no_shutdown | set(true) | default(false) }}
+  mtu {{ mtu | DIGIT | default(false) }}
+  no ip redirects {{ no_ip_redirects | set(true) | default(false) }}
+  ip address {{ ipv4_address | IP | default(false) }}/{{ ipv4_mask | DIGIT | default(false) }}
+  no ipv6 redirects {{ no_ipv6_redirects | set(true) | default(false) }}
+  ip ospf passive-interface {{ ipv4_ospf_passive_interface | set(true) | default(false) }}
+  ip router ospf {{ ipv4_ospf_pid | DIGIT | default(false) }} area {{ ipv4_ospf_area | IP | default(false) }}
+  ip pim sparse-mode {{ ip_pim_sparse_mode | set(true) | default(false) }}
+  hsrp bfd {{ hsrp_bfd | set(true) | default(false) }}
+  hsrp version {{ hsrp_version | DIGIT | default(false) }}
+  hsrp {{ hsrp_group_member | DIGIT | default(false) }}
+    authentication md5 key-string {{ hsrp_authentication_md5_key_string | default(false) }}
+    preempt delay minimum {{ hsrp_preempt_delay_minimum | DIGIT | default(false) }}
+    priority {{ hsrp_priority | DIGIT | default(false) }}
+    timers  {{ hsrp_timers_hello | DIGIT | default(false) }}  {{ hsrp_timers_hold | DIGIT | default(false) }}
+    ip {{ hsrp_ip | IP | default(false) }}
+</group>

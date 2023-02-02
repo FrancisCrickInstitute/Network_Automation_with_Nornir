@@ -1,0 +1,24 @@
+---
+SWITCH:
+  data:
+    nodata: /"/"
+
+ROUTER:
+  data:
+    nodata: /"/"
+
+DEV:
+  data:
+    nodata: /"/"
+
+PROD:
+  data:
+    nodata: /"/"
+
+BUILDING-A:
+  data:
+    nodata: /"/"
+
+BUILDING-B:
+  data:
+    nodata: /"/"

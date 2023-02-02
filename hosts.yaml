@@ -1,0 +1,40 @@
+---
+SWITCH-A:
+  hostname: switch-a.company.x
+  groups:
+    - SWITCH
+    - PROD
+    - BUILDING-A
+  data:
+    loc: Building-A, Floor-1, Room-999
+    os: nxos
+
+ROUTER-A:
+  hostname: router-a.company.x
+  groups:
+    - ROUTER
+    - PROD
+    - BUILDING-A
+  data:
+    loc: Building-A, Floor-1, Room-111
+    os: nxos_ssh
+
+SWITCH-X:
+  hostname: switch-x.company.x
+  groups:
+    - SWITCH
+    - DEV
+    - BUILDING-B
+  data:
+    loc: Building-B, Floor-9, Room-111
+    os: ios
+
+ROUTER-Q:
+  hostname: router-q.company.x
+  groups:
+    - ROUTER
+    - DEV
+    - BUILDING-B
+  data:
+    loc: Building-B, Floor-5, Room-555
+    os: ios

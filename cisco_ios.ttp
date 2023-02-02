@@ -1,0 +1,149 @@
+# RegEx Patterns
+<vars>
+ETHERNET = ".+Ethernet\S+"
+PO = ".+channel\S+"
+</vars>
+
+<group name="GLOBAL">
+hostname {{ hostname }}
+</group>
+
+<group name="AAA">
+aaa new-model {{ aaa_new_model | set(true) }}
+aaa authentication login default local {{ aaa_authentication_login_default_local | set(true) | default(false) }}
+aaa authentication login VTY-AUTHEN group tacacs+ local {{ aaa_authentication_login_vty_group | set(true) | default(false) }}
+aaa authentication login CONS-AUTHEN group tacacs+ local none {{ aaa_authentication_login_cons_group | set(true) | default(false) }}
+aaa authentication enable default enable {{ aaa_authentication_enable | set(true) | default(false) }}
+aaa authentication dot1x default group radius {{ aaa_authentication_dot1x | set(true) | default(false) }}
+aaa authorization console {{ aaa_authorization_console | set(true) | default(false) }}
+aaa authorization exec VTY-AUTHOR group tacacs+ local {{ aaa_authorization_exec_vty_group | set(true) | default(false) }}
+aaa authorization exec CONS-AUTHOR group tacacs+ local none {{ aaa_authorization_exec_cons_group | set(true) | default(false) }}
+aaa authorization network default group radius {{ aaa_authorization_network_default | set(true) | default(false) }}
+aaa authorization network cts-list group radius {{ aaa_authorization_network_cts | set(true) | default(false) }}
+aaa accounting dot1x default start-stop group radius {{ aaa_accounting_dot1x | set(true) | default(false) }}
+aaa accounting exec default start-stop group tacacs+ {{ aaa_accounting_exec | set(true) | default(false) }}
+aaa accounting commands 0 default start-stop group tacacs+ {{ aaa_accounting_command_0 | set(true) | default(false) }}
+aaa accounting commands 1 default start-stop group tacacs+ {{ aaa_accounting_command_1 | set(true) | default(false) }}
+aaa accounting commands 15 default start-stop group tacacs+ {{ aaa_accounting_command_15 | set(true) | default(false) }}
+aaa server radius dynamic-author {{ aaa_server_radius_dynamic_author | set(true) | default(false) }}
+ <group name="raddyn">
+ client {{ raddyn_address | IP | default(false) }} server-key 7 {{ raddyn_key | default(false) }}
+ </group>
+ server-key 7 {{ raddyn_server_key | default(false) }}
+ auth-type {{ raddyn_auth_type | default(false) }}
+aaa session-id common {{ aaa_session_id_common | set(true) | default(false) }}
+</group>
+
+# Use TTP Dynamic Path to nest data
+# https://ttp.readthedocs.io/en/stable/Forming%20Results%20Structure/Dynamic%20Path.html
+<group name="ETH.{{ interface }}">
+interface {{ interface | re("ETHERNET") }}
+ description {{ description | ORPHRASE | default(false)  }}
+ ip address {{ ipv4_address | IP | default(false) }} {{ ipv4_mask | IP | default(false) }}
+ switchport access vlan {{ switchport_access_vlan | DIGIT | default(false) }}
+ switchport mode {{ switchport_mode | default(false) }}
+ switchport trunk allowed vlan {{ switchport_trunk_allowed_vlan | ORPHRASE | default(false) }}
+ switchport nonegotiate {{ switchport_nonegotiate | set(true) | default(false) }}
+ switchport voice vlan {{ switchport_voice_vlan | DIGIT | default(false)}}
+ switchport port-security maximum {{ switchport_port_security_max | DIGIT | default(false) }}
+ switchport port-security mac-address sticky {{ switchport_port_security_mac_address_sticky | set(true) | default(false) }}
+ switchport port-security {{ switchport_port_security | set(true) | default(false) }}
+ no logging event link-status {{ no_logging_event_link_status | set(true) | default(false) }}
+ authentication event fail action next-method {{ authentication_event_fail_action_next_method | set(true) | default(false) }}
+ authentication event server dead action authorize {{ authentication_event_server_dead_action_authorize | set(true) | default(false) }}
+ authentication event server alive action reinitialize {{ authentication_event_server_alive_action_reinitialize | set(true) | default(false) }}
+ authentication host-mode multi-auth {{ authentication_host_mode_multi_auth | set(true) | default(false) }}
+ authentication order dot1x mab {{ authentication_order_dot1x_mab | set(true) | default(false) }}
+ authentication priority dot1x mab {{ authentication_priority_dot1x_mab | set(true) | default(false) }}
+ authentication port-control auto {{ authentication_port_control_auto | set(true) | default(false) }}
+ authentication periodic {{ authentication_periodic | set(true) | default(false) }}
+ authentication timer reauthenticate server {{ authentication_timer_reauthenticate_server | set(true) | default(false) }}
+ mab {{ mab | set(true) | default(false) }}
+ snmp trap mac-notification change added {{ snmp_trap_mac_notification_change_added | set(true) | default(false) }}
+ snmp trap mac-notification change removed {{ snmp_trap_mac_notification_change_removed | set(true) | default(false) }}
+ dot1x pae authenticator {{ dot1x_pae_authenticator | set(true) | default(false) }}
+ dot1x timeout tx-period 10 {{ dot1x_timeout_tx_period_10 | set(true) | default(false) }}
+ qos trust device cisco-phone {{ qos_trust_device_cisco_phone | set(true) | default(false) }}
+ spanning-tree portfast {{ spanning_tree_portfast | set(true) | default(false) }}
+ spanning-tree bpduguard enable {{ spanning_tree_bpduguard_enable | set(true) | default(false) }}
+ spanning-tree guard root {{ spanning_tree_guard_root | set(true) | default(false) }}
+ service-policy input {{ service_policy_input | default(false) }}
+ service-policy output {{ service_policy_output | default(false) }}
+ no cdp enable {{ no_cdp_enable | set(true) | default(false) }}
+ shutdown {{ shutdown | set(true) | default(false) }}
+ no switchport {{ no_switchport | set(true) | default(false) }}
+ ip address {{ ipv4_address | IP | default(false) }} {{ ipv4_mask | IP | default(false) }}
+ ip pim sparse-mode {{ ip_pim_sparse_mode | set(true) | default(false) }}
+ ip ospf authentication message-digest {{ ip_ospf_authentication_message_digest | set(true) | default(false) }}
+ ip ospf message-digest-key 1 md5 7 {{ ip_ospf_message_digest_key | default(false) }}
+ ip ospf network point-to-point {{ ip_ospf_network_point_to_point | set(true) | default(false) }}
+ ip ospf {{ ip_ospf_pid | DIGIT | default(false) }} area {{ ip_ospf_area | DIGIT | default(false) }}
+ ipv6 address {{ ipv6_address | default(false) }}/{{ ipv6_prefix | default(false) | default(false) }}
+ ipv6 ospf {{ ipv6_ospf_pid | DIGIT | default(false) }} area {{ ipv6_ospf_area | DIGIT | default(false) }}
+ ipv6 ospf network point-to-point {{ ipv6_ospf_pid_ospf_network_point_to_point | set(true) | default(false) }}
+ cts manual {{ cts_manual | set(true) | default(false) }}
+  policy static sgt 2 trusted {{ policy_static_sgt_2_trusted | set(true) | default(false) }}
+ no cts role-based enforcement {{ no_cts_role_based_enforcement | set(true) | default(false) }}
+ bfd interval {{ bfd_interval | DIGIT | default(false) }} }} min_rx {{ bfd_mix_rx | DIGIT | default(false) }} multiplier {{ bfd_multiplier | DIGIT | default(false) }}
+</group>
+
+<group name="PO.{{ interface }}">
+interface {{ interface | re("PO") }}
+ description {{ description | ORPHRASE | default(false) }}
+ switchport {{ switchport | set(true) | default(false) }}
+ switchport trunk allowed vlan {{ switchport_trunk_allowed_vlan | default(false) }}
+ switchport mode {{ switchport_mode | default(false) }}
+ switchport nonegotiate {{ switchport_nonegotiate | set(true) | default(false) }}
+ mtu {{ mtu | DIGIT | default(false) }}
+ spanning-tree portfast {{ spanning_tree_portfast | default(false) }}
+</group>
+
+<group name="SVI.{{ svi }}">
+interface Vlan{{ svi }}
+ description {{ description | ORPHRASE | default(false) }}
+ ip address {{ ipv4_address | IP | default(false) }} {{ ipv4_mask | IP | default(false) }}
+ ipv6 address {{ ipv6_address | default(false) }}/{{ ipv6_prefix | default(false) | default(false) }}
+ ip helper-address {{ helper_a | IP | default(false) }}
+ ip helper-address {{ helper_b | IP | default(false) }}
+ no ip redirects {{ no_ip_redirects | set(true) | default(false) }}
+ no ip unreachables {{ no_ip_unreachables | set(true) | default(false) }}
+ no ip proxy-arp {{ no_ip_proxy_arp | set(true) | default(false) }}
+ ip pim {{ pim_mode | default(false) }}
+ standby version {{ standby_version | default(false) }}
+ standby 0 ip {{ standby_ip | IP | default(false) }}
+ standby 0 priority {{ standby_priority | default(false) }}
+ standby 0 preempt delay minimum {{ standby_delay | default(false) }}
+ standby 0 track {{ standby_track_a | default(false) }} decrement {{ standby_decrement_a | default(false) }}
+ standby 0 track {{ standby_track_b | default(false) }} decrement {{ standby_decrement_b | default(false) }}
+ ip igmp version {{ igmp_version | default(false) }}
+ ip ospf message-digest-key 1 md5 7 {{ ipv4_ospf_message_digest_key | default(false) }}
+ ip ospf {{ ipv4_ospf_pid | default(false) }} area {{ ipv4_ospf_area | default(false) }}
+ ip ospf network point-to-point {{ ipv4_ospf_network_point_to_point | set(true) | default(false) }}
+ ipv6 ospf {{ ipv6_ospf_pid | DIGIT | default(false) }} area {{ ipv6_ospf_area | DIGIT | default(false) }}
+ ipv6 ospf network point-to-point {{ ipv6_ospf_network_point_to_point | set(true) | default(false) }}
+</group>
+
+<group name="OSPFv2">
+router ospf {{ ospfv2_pid | DIGIT | default(false) }}
+ router-id {{ ospfv2_router_id | IP | default(false) }}
+ no log-adjacency-changes {{ ospfv2_no_log_adj | set(true) | default(false) }}
+ auto-cost reference-bandwidth {{ ospfv2_auto_cost_refbw | DIGIT | default(false) }}
+ nsf ietf {{ ospfv2_nsf_ietf | set(true) | default(false) }}
+ area {{ ospfv2_area_id | DIGIT | default(false) }} {{ ospfv2_area_type | default(false) }}
+ passive-interface default {{ ospfv2_passive_interface_default | set(true) | default(false) }}
+ <group name="ospfv2_no_passive_interfaces">
+ no passive-interface {{ ospfv2_no_passive_interface | ORPHRASE | default(false) }}
+ </group>
+</group>
+
+<group name="OSPFv3">
+router ospf {{ ospfv3_pid | DIGIT | default(false) }}
+ router-id {{ ospfv3_router_id | IP | default(false) }}
+ no log-adjacency-changes {{ ospfv3_no_log_adj | set(true) | default(false) }}
+ auto-cost reference-bandwidth {{ ospfv3_auto_cost_refbw | DIGIT | default(false) }}
+ area {{ ospfv3_area_id | DIGIT | default(false) }} {{ ospfv2_area_type | default(false) }}
+ passive-interface default {{ ospfv3_passive_interface_default | set(true) | default(false) }}
+ <group name="ospfv3_no_passive_interfaces">
+ no passive-interface {{ ospfv3_no_passive_interface | ORPHRASE | default(false) }}
+ </group>
+</group>
