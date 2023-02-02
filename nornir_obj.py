@@ -7,7 +7,7 @@ from nornir import InitNornir
 from nornir.core.inventory import ConnectionOptions
 from nornir.core.filter import F
 import pprint # Required to Pretty Print results
-pp = pprint.PrettyPrinter(indent=4) # 
+pp = pprint.PrettyPrinter(indent=4) # Pretty Printer Config
 import ipdb
 
 print('\n**********************')
