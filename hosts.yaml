@@ -7,7 +7,7 @@ SWITCH-A:
     - BUILDING-A
   data:
     loc: Building-A, Floor-1, Room-999
-    os: nxos
+  platform: cisco_ios
 
 ROUTER-A:
   hostname: router-a.company.x
@@ -17,7 +17,7 @@ ROUTER-A:
     - BUILDING-A
   data:
     loc: Building-A, Floor-1, Room-111
-    os: nxos_ssh
+  platform: cisco_nxos
 
 SWITCH-X:
   hostname: switch-x.company.x
@@ -27,7 +27,7 @@ SWITCH-X:
     - BUILDING-B
   data:
     loc: Building-B, Floor-9, Room-111
-    os: ios
+  platform: cisco_ios
 
 ROUTER-Q:
   hostname: router-q.company.x
@@ -37,4 +37,4 @@ ROUTER-Q:
     - BUILDING-B
   data:
     loc: Building-B, Floor-5, Room-555
-    os: ios
+  platform: cisco_nxos

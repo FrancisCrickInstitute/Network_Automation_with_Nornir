@@ -17,10 +17,6 @@ print('\n**********************')
 # Initialise Nornir
 nr = InitNornir(config_file='config.yaml')
 
-# Credentials
-nr.inventory.defaults.username = input('Username: ')
-nr.inventory.defaults.password = input('Password: ')
-
 # Simple Filter
 nornir_obj = nr.filter(F(groups__contains='DEV'))
 print('\nNornir Inventory Hosts: ' + str(nornir_obj.inventory.hosts))
@@ -34,18 +30,23 @@ for host in nornir_obj.inventory.hosts:
 # Slightly more complex filter. I'll not do anything with this, just demo
 # how to filter on additional values.
 nornir_obj_complex = nr.filter(F(groups__contains='DEV') & \
-    (F(os='ios')))
+    (F(platform='cisco_ios')))
+print('\nNornir Inventory Hosts (Complex Filter): ' + str(nornir_obj_complex.inventory.hosts))
 
 ipdb.set_trace()
-print('\nPress c to continue or n to step through')
+print('\nPress 'c' to Continue or 'n' to Step Through')
 print('\n****************************')
 print('*** Nornir/ NetMiko Task ***')
 print('****************************')
-print('Please wait...')
 
 
 from nornir.plugins.tasks.networking import netmiko_send_command
 from nornir.plugins.functions.text import print_result
+
+# Credentials
+print('\nPlease Input Valid Credentials:')
+nr.inventory.defaults.username = input('Username: ')
+nr.inventory.defaults.password = input('Password: ')
 
 task_a = nornir_obj.run(task=netmiko_send_command, command_string='show ip route', use_textfsm=True)
 print('\nNetMiko Task Type: ' + str(type(task_a)))
@@ -59,7 +60,7 @@ for host, response in task_a.items():
     dict_a[host] = response.result
 
 ipdb.set_trace()
-print('\nPress c to continue or n to step through')
+print('\nPress 'c' to Continue or 'n' to Step Through')
 print('\n****************************')
 print('\n*** Template-Text-Parser ***')
 print('\n****************************')
